@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Mirror of tad-landing/src/index.css base + component layers, re-targeted at
+   Tailwind v3. Keep in lockstep with landing when tokens change. */
+
+:root {
+  --color-brand-50: #eef4ff;
+  --color-brand-100: #d9e6ff;
+  --color-brand-200: #b8d0ff;
+  --color-brand-500: #2f66f5;
+  --color-brand-700: #1a3eb0;
+  --color-ink-200: #dde1e9;
+  --color-ink-700: #2a3142;
+  --color-ink-900: #0d1220;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-white text-ink-700 font-sans;
+    font-feature-settings: 'cv11', 'ss01';
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply text-ink-900 font-display;
+    letter-spacing: -0.02em;
+  }
+
+  ::selection {
+    background: var(--color-brand-200);
+    color: var(--color-ink-900);
+  }
+}
+
+@layer components {
+  .container-tad {
+    @apply mx-auto w-full max-w-7xl px-6 md:px-8;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-brand-600
+           px-6 py-3 text-sm font-semibold text-white shadow-sm
+           transition hover:bg-brand-700 focus:outline-none focus-visible:ring-2
+           focus-visible:ring-brand-500 focus-visible:ring-offset-2
+           disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full
+           border border-ink-200 bg-white px-6 py-3 text-sm font-semibold
+           text-ink-800 transition hover:border-ink-300 hover:bg-ink-50
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500
+           focus-visible:ring-offset-2;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-1 text-sm font-semibold text-brand-700
+           transition hover:text-brand-800;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full border border-brand-200
+           bg-brand-50 px-3 py-1 text-xs font-semibold uppercase tracking-wider
+           text-brand-700;
+  }
+
+  .section {
+    @apply py-20 md:py-28;
+  }
+
+  .card {
+    @apply rounded-2xl border border-ink-200 bg-white p-6 transition
+           hover:border-ink-300 hover:shadow-sm;
+  }
+
+  .field-input {
+    @apply mt-1.5 w-full rounded-lg border border-ink-200 bg-white px-3 py-2.5
+           text-sm text-ink-800 placeholder-ink-400
+           focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100
+           disabled:opacity-60;
+  }
+
+  .field-label {
+    @apply text-sm font-semibold text-ink-800;
+  }
+}

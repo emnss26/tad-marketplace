@@ -1,0 +1,12 @@
+node_modules/
+.next/
+out/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+.terraform/
+*.tfstate
+*.tfstate.*
+infra/.terraform.lock.hcl
+package-lock.json
