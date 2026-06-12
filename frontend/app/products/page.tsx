@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import AddToCartButton from '@/components/AddToCartButton';
 import Hero from '@/components/Hero';
-import { PLAN_LABELS, PLANS, PRODUCTS } from '@/lib/products';
+import { PLAN_LABELS, PLANS, PRODUCTS, SALES_EMAIL } from '@/lib/products';
 
 export const metadata: Metadata = {
   title: 'Products',
@@ -52,28 +52,53 @@ export default function ProductsPage() {
             <div className="grid gap-6 md:grid-cols-3">
               {PLANS.map((plan) => {
                 const tier = product.tiers[plan];
+                const isEnterprise = plan === 'enterprise';
+                // Quote products (e.g. TAD Platform: needs the customer's APS
+                // app + ACC hub) and the enterprise tier are sales-led.
+                const contactSales = isEnterprise || product.purchase === 'quote';
                 return (
                   <article key={plan} className="card flex flex-col text-left">
                     <p className="text-xs font-semibold uppercase tracking-wider text-brand-700">
                       {PLAN_LABELS[plan]}
                     </p>
-                    <p className="mt-3 text-3xl font-bold text-ink-900">
-                      {priceLabel(tier.priceUsdCents)}
-                      <span className="ml-1 text-sm font-medium text-ink-500">/mo</span>
-                    </p>
+                    {contactSales ? (
+                      <p className="mt-3 text-3xl font-bold text-ink-900">
+                        Custom
+                        <span className="ml-1 text-sm font-medium text-ink-500">pricing</span>
+                      </p>
+                    ) : (
+                      <p className="mt-3 text-3xl font-bold text-ink-900">
+                        {priceLabel(tier.priceUsdCents)}
+                        <span className="ml-1 text-sm font-medium text-ink-500">/mo</span>
+                      </p>
+                    )}
                     <p className="mt-3 text-sm text-ink-600">{tier.description}</p>
                     <p className="mt-2 text-sm font-medium text-ink-800">
-                      {tier.seatsIncluded.toString()} seat{tier.seatsIncluded === 1 ? '' : 's'}{' '}
-                      included
+                      {isEnterprise
+                        ? 'From 25 seats'
+                        : `${tier.seatsIncluded.toString()} seat${
+                            tier.seatsIncluded === 1 ? '' : 's'
+                          } included`}
                     </p>
                     <div className="mt-auto pt-6">
-                      <AddToCartButton
-                        productId={product.id}
-                        productName={product.name}
-                        plan={plan}
-                        priceUsdCents={tier.priceUsdCents}
-                        disabled={product.status === 'coming_soon'}
-                      />
+                      {contactSales ? (
+                        <a
+                          href={`mailto:${SALES_EMAIL}?subject=${encodeURIComponent(
+                            `${product.name} — ${PLAN_LABELS[plan]} quote`,
+                          )}`}
+                          className="btn-secondary w-full"
+                        >
+                          Contact sales
+                        </a>
+                      ) : (
+                        <AddToCartButton
+                          productId={product.id}
+                          productName={product.name}
+                          plan={plan}
+                          priceUsdCents={tier.priceUsdCents}
+                          disabled={product.status === 'coming_soon'}
+                        />
+                      )}
                     </div>
                   </article>
                 );

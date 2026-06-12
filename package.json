@@ -18,7 +18,8 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,mjs,js,json,md,yml,yaml}\" --ignore-path .gitignore",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
-    "build": "npm run build --workspaces --if-present"
+    "build": "npm run build --workspaces --if-present",
+    "build:lambdas": "node scripts/build-lambdas.mjs"
   },
   "devDependencies": {
     "@types/node": "^20.14.0",

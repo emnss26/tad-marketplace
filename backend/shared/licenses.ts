@@ -1,4 +1,4 @@
-import { PutCommand, QueryCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
+import { PutCommand, QueryCommand, ScanCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
 import { ulid } from 'ulid';
 import { ddb, TABLE_NAMES } from './ddb.js';
 import type {
@@ -72,6 +72,32 @@ export async function findLicenseBySubscriptionId(
     const found = licenses.find((l) => l.subscription_id === subscriptionId);
     if (found) return found;
   }
+  return null;
+}
+
+/**
+ * Webhook-path lookup: find a license by provider `subscription_id` with NO
+ * user/tenant context (PayPal webhooks carry only the subscription id). Uses
+ * a Scan with FilterExpression — fine at current volumes (hundreds of rows).
+ * When the table grows, add a GSI on `subscription_id` and switch to Query.
+ */
+export async function findLicenseBySubscriptionIdGlobal(
+  subscriptionId: string,
+): Promise<License | null> {
+  let exclusiveStartKey: Record<string, unknown> | undefined;
+  do {
+    const res = await ddb.send(
+      new ScanCommand({
+        TableName: TABLE_NAMES.licenses,
+        FilterExpression: 'subscription_id = :sid',
+        ExpressionAttributeValues: { ':sid': subscriptionId },
+        ExclusiveStartKey: exclusiveStartKey,
+      }),
+    );
+    const found = (res.Items as License[] | undefined)?.[0];
+    if (found) return found;
+    exclusiveStartKey = res.LastEvaluatedKey as Record<string, unknown> | undefined;
+  } while (exclusiveStartKey !== undefined);
   return null;
 }
 

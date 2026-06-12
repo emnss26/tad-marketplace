@@ -14,9 +14,12 @@ export type Plan = (typeof PLANS)[number];
 
 export const PLAN_LABELS: Record<Plan, string> = {
   personal: 'Personal',
-  smb: 'SMB',
+  smb: 'Team',
   enterprise: 'Enterprise',
 };
+
+/** Email used by "Contact sales" CTAs (enterprise tier is not self-serve). */
+export const SALES_EMAIL = 'taller.arq.dgtl@gmail.com';
 
 export interface ProductTier {
   priceUsdCents: number;
@@ -31,6 +34,8 @@ export interface Product {
   tagline: string;
   description: string;
   status: 'live' | 'coming_soon';
+  /** 'self_serve' = cart + PayPal checkout. 'quote' = Contact-sales only. */
+  purchase: 'self_serve' | 'quote';
   /** How the customer accesses the product after subscribing. */
   delivery: 'installer' | 'web';
   /** For `web` products, the URL to open after purchase (e.g. platform.tad.com.mx). */
@@ -47,12 +52,13 @@ export const PRODUCTS: readonly Product[] = [
     description:
       'A remote MCP server that exposes Revit actions — query elements, create walls and rooms, run QA, push parameters — to any MCP-aware LLM client. One Bearer token per PC.',
     status: 'live',
+    purchase: 'self_serve',
     delivery: 'installer',
     tiers: {
-      personal: { priceUsdCents: 2000, seatsIncluded: 1, description: '1 PC, individual use' },
-      smb: { priceUsdCents: 3900, seatsIncluded: 5, description: 'Up to 5 PCs, team admin' },
+      personal: { priceUsdCents: 8900, seatsIncluded: 1, description: '1 PC, individual use' },
+      smb: { priceUsdCents: 41900, seatsIncluded: 5, description: 'Up to 5 PCs, team admin' },
       enterprise: {
-        priceUsdCents: 4900,
+        priceUsdCents: 99900,
         seatsIncluded: 25,
         description: 'Up to 25 PCs, SSO-ready',
       },
@@ -66,12 +72,13 @@ export const PRODUCTS: readonly Product[] = [
     description:
       'Same Bearer-token + hostname model, this time wrapping AutoCAD. Launching alongside the Revit MCP — pricing parity.',
     status: 'coming_soon',
+    purchase: 'self_serve',
     delivery: 'installer',
     tiers: {
-      personal: { priceUsdCents: 2000, seatsIncluded: 1, description: '1 PC, individual use' },
-      smb: { priceUsdCents: 3900, seatsIncluded: 5, description: 'Up to 5 PCs, team admin' },
+      personal: { priceUsdCents: 8900, seatsIncluded: 1, description: '1 PC, individual use' },
+      smb: { priceUsdCents: 41900, seatsIncluded: 5, description: 'Up to 5 PCs, team admin' },
       enterprise: {
-        priceUsdCents: 4900,
+        priceUsdCents: 99900,
         seatsIncluded: 25,
         description: 'Up to 25 PCs, SSO-ready',
       },
@@ -83,19 +90,24 @@ export const PRODUCTS: readonly Product[] = [
     name: 'TAD Platform',
     tagline: 'BIM coordination + project tracking + AI.',
     description:
-      'Full TAD Platform subscription: drawing control, 4D-5D site tracking, model audit, AEC data model integration, and AI features powered by Google Gemini.',
+      'Full TAD Platform subscription: drawing control, 4D-5D site tracking, model audit, AEC data model integration, and AI features powered by Google Gemini. Deployment requires your ACC hub id and APS app credentials — provisioning is sales-led.',
     status: 'live',
+    purchase: 'quote',
     delivery: 'web',
     webUrl: 'https://platform.tad.com.mx',
     tiers: {
       personal: {
-        priceUsdCents: 2000,
+        priceUsdCents: 8900,
         seatsIncluded: 1,
         description: '1 named user, individual workspace',
       },
-      smb: { priceUsdCents: 3900, seatsIncluded: 5, description: 'Up to 5 users, shared projects' },
+      smb: {
+        priceUsdCents: 41900,
+        seatsIncluded: 5,
+        description: 'Up to 5 users, shared projects',
+      },
       enterprise: {
-        priceUsdCents: 4900,
+        priceUsdCents: 99900,
         seatsIncluded: 25,
         description: 'Up to 25 users, org-wide projects',
       },

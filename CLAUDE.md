@@ -34,7 +34,7 @@ a service-to-service API. See `TAD_MCP_AWS/docs/CONTROL_PLANE.md`.
    the Stripe Dashboard. Re-running the seed must be idempotent.
 4. **Everything in English** — code, comments, UI, emails.
 5. **Do not create another AWS Budget.** The account-wide one lives in
-   `TAD_MCP_AWS/infra/budgets.tf` at $35/$50, alerts go to
+   `TAD_MCP_AWS/infra/budgets.tf` at $42/$60 (warning/cap), alerts go to
    `taller.arq.dgtl@gmail.com`. This repo tags every resource
    `Project=marketplace` instead.
 6. **Do not serve `/.well-known/mcp.json`** — that endpoint belongs to

@@ -39,19 +39,19 @@ const PRODUCTS = [
     name: 'TAD MCP for Revit',
     description:
       'Remote MCP server exposing Autodesk Revit actions to Claude and other MCP clients.',
-    tiers: { personal: 2000, smb: 3900, enterprise: 4900 },
+    tiers: { personal: 8900, smb: 41900, enterprise: 99900 },
   },
   {
     product_id: 'prd_acad_mcp',
     name: 'TAD MCP for AutoCAD',
     description: 'Same Bearer-token + hostname model wrapping AutoCAD.',
-    tiers: { personal: 2000, smb: 3900, enterprise: 4900 },
+    tiers: { personal: 8900, smb: 41900, enterprise: 99900 },
   },
   {
     product_id: 'prd_platform',
     name: 'TAD Platform',
     description: 'BIM coordination, project tracking, AEC data model, and AI features.',
-    tiers: { personal: 2000, smb: 3900, enterprise: 4900 },
+    tiers: { personal: 8900, smb: 41900, enterprise: 99900 },
   },
 ];
 

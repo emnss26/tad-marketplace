@@ -64,6 +64,7 @@ const { handler: seatRevoke } = await import('../handlers/seat-revoke.js');
 const { handler: meSeats } = await import('../handlers/me-seats.js');
 const { handler: teamInvite } = await import('../handlers/team-invite.js');
 const { handler: licenseCancel } = await import('../handlers/license-cancel.js');
+const { handler: webhookPaypal } = await import('../handlers/webhook-paypal.js');
 
 type LambdaHandler = typeof authMagicLink;
 
@@ -195,6 +196,7 @@ mount('POST', '/seats/:seat_id/revoke', seatRevoke);
 mount('GET', '/me/seats', meSeats);
 mount('POST', '/team/invite', teamInvite);
 mount('POST', '/licenses/:license_id/cancel', licenseCancel);
+mount('POST', '/webhooks/paypal', webhookPaypal);
 
 app.get('/health', (_req: Request, res: Response) => {
   res.json({ ok: true, ts: Math.floor(Date.now() / 1000) });

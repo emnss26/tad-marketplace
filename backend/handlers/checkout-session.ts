@@ -1,6 +1,6 @@
 import type { APIGatewayProxyHandlerV2 } from 'aws-lambda';
 import { readSessionCookie, verifySessionJwt } from '../shared/auth.js';
-import { getTier } from '../shared/catalog.js';
+import { getProduct, getTier } from '../shared/catalog.js';
 import { isAllowedOrigin, json, parseJsonBody } from '../shared/http.js';
 import { createPayPalSubscription } from '../shared/paypal.js';
 import { getUserByEmail } from '../shared/users.js';
@@ -52,6 +52,16 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
 
   if (!isProductId(body.product_id) || !isPlan(body.plan)) {
     return json(400, { error: 'invalid_product_or_plan' });
+  }
+
+  // Sales-led products and the enterprise tier are not self-serve: the FE
+  // shows "Contact sales" for them, but guard here too in case of direct
+  // API calls.
+  if (getProduct(body.product_id).purchase === 'quote') {
+    return json(400, { error: 'quote_only_product' });
+  }
+  if (body.plan === 'enterprise') {
+    return json(400, { error: 'quote_only_plan' });
   }
 
   // Look up PayPal plan id
